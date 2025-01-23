@@ -1,0 +1,20 @@
+{
+    "name": "alberto/sakila-php-test",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Alberto\\SakilaPhpTest\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "AlbertInfo",
+            "email": "alb.stend97@gmail.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit" : "^9.5"
+    }
+}
+
