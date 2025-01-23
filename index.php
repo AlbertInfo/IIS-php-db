@@ -20,6 +20,16 @@ $dbConfig = new DBConfig('localhost',
 //Creo la connessione a db passando la dbConfig che mi ritorna la stringa 
 //proprio come vuole il PDO.
 
+// Qui posso passare due tipi di connessione al db o TYPE_PDO O TYPE_MYSQLi che attualmente non è
+//implementato e tira un'eccezione.
 $db = DatabaseFactory::Create($dbConfig, DatabaseContract::TYPE_PDO);
 
+$results = $db->getData("actor", []);
+
+foreach($results as $singleResult)
+
+echo $singleResult["first_name"] . PHP_EOL;
+
 echo 'Funziona';
+
+

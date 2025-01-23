@@ -23,4 +23,14 @@ class MyPDO extends \PDO implements DatabaseContract {
 
         return "mysql:host={$host};port={$port};dbname={$dbName}";
     }
+
+    public function getData(string $tableName, array $options = []): array
+
+    {
+        $query = "SELECT * FROM " . $tableName;
+        $statement =  $this->prepare($query);
+        $statement->execute();
+        return $statement->fetchAll();
+        
+    }
 }
