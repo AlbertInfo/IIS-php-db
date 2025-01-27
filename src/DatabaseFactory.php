@@ -12,7 +12,7 @@ class DatabaseFactory
 
 
 
-
+// il metodo create restuisce un database contract o una pdo? 
     public static function Create(DbConfig $dbConfig, string $type = DatabaseContract::TYPE_PDO): DatabaseContract | null
     {
 

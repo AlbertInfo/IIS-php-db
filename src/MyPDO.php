@@ -18,19 +18,37 @@ class MyPDO extends \PDO implements DatabaseContract {
         // vuole i seguenti parametri
         parent::__construct($dsn, $username, $password, $options);
     }
+
+    public function getData(string $query, array $params =[]):QueryResultContract
+
+    {
+        // $query = "SELECT * FROM " . $tableName;
+        $statement =  $this->prepare($query);
+        $statement->execute($params);
+        //Fetch all restituisce tutti i dati 
+        return new PDOQueryResult($statement);
+        
+    }
+
+    /**
+     
+     * Summary of getDsn
+     * @param string $host
+     * @param string $port
+     * @param string $dbName
+     * @return string
+     */
+
+
 //Questa funzione restituisce le infomrazioni per la connessione a db.
     private function getDsn( string $host,string  $port, string $dbName){
 
-        return "mysql:host={$host};port={$port};dbname={$dbName}";
+        return 
+        "mysql:
+        host={$host};
+        port={$port};
+        dbname={$dbName}";
     }
 
-    public function getData(string $tableName, array $options = []): array
-
-    {
-        $query = "SELECT * FROM " . $tableName;
-        $statement =  $this->prepare($query);
-        $statement->execute();
-        return $statement->fetchAll();
-        
-    }
+   
 }
