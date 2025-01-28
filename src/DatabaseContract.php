@@ -2,7 +2,8 @@
 
 namespace Alberto\SakilaPhpTest;
 
-use PDOStatement;
+
+
 
 interface DatabaseContract
 {
@@ -10,37 +11,11 @@ interface DatabaseContract
     const TYPE_PDO = 'pdo';
     const TYPE_MySQLi = 'mysqli';
 
-    public function getData(string $query, array $params = []): QueryResultContract;
+    public function getData(string $query, array $params = []): DatabaseQueryResultContract ;
+
+    public function setData(string $command, array $items ) :void ;
 }
 
 
-interface QueryResultContract
-{
-    public function fetch();
-    public function fetchAll();
-}
-
-class PDOQueryResult implements QueryResultContract
-{
-
-    private PDOStatement $statement;
-
-    public function __construct(PDOStatement $statement)
-    {
-        $this->statement = $statement;
-    }
 
 
-    public function fetch() : mixed
-    {
-
-        return $this->statement->fetch();
-    }
-
-
-    public function fetchAll() :array
-    {
-
-        return $this->statement->fetchAll();
-    }
-}

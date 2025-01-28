@@ -2,7 +2,6 @@
 //Attraverso il namespace impostato come da composer.json riesco a fare l'autoload delle classi senza
 //dover fare require dei singoli file.php
 namespace Alberto\SakilaPhpTest;
-
 use Alberto\SakilaPhpTest\DatabaseContract;
 
 //PDO è UNA classe nativa di php e richiede lo slash prima 
@@ -19,15 +18,25 @@ class MyPDO extends \PDO implements DatabaseContract {
         parent::__construct($dsn, $username, $password, $options);
     }
 
-    public function getData(string $query, array $params =[]):QueryResultContract
+    public function getData(string $query, array $params = []): DatabaseQueryResultContract
 
     {
         // $query = "SELECT * FROM " . $tableName;
-        $statement =  $this->prepare($query);
+        $statement = $this->prepare($query);
         $statement->execute($params);
         //Fetch all restituisce tutti i dati 
-        return new PDOQueryResult($statement);
+        return new MyPDOQueryResult($statement);
         
+    }
+
+    public function setData(string $command, array $items):void{
+     
+        $statement = $this->prepare($command);
+
+        foreach($items as $item){
+            $statement->execute($item);
+        }
+  
     }
 
     /**
