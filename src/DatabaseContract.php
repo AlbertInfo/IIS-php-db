@@ -14,6 +14,8 @@ interface DatabaseContract
     public function getData(string $query, array $params = []): DatabaseQueryResultContract ;
 
     public function setData(string $command, array $items ) :void ;
+
+    public function doWithTransaction(array $operations) :void;
 }
 
 
