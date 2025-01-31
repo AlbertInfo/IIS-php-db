@@ -27,7 +27,9 @@ $dbConfig = new DBConfig(
 
 // Qui posso passare due tipi di connessione al db o TYPE_PDO O TYPE_MYSQLi che attualmente non è
 //implementato e tira un'eccezione.
-$db = DatabaseFactory::Create($dbConfig, DatabaseContract::TYPE_PDO);
+$db = DatabaseFactory::Create($dbConfig, DatabaseContract::TYPE_MySQLi);
+$db2 = DatabaseFactory::Create($dbConfig, DatabaseContract::TYPE_PDO);
+
 
 // $results = $db->getData("actor", []);
 // var_dump($results);
@@ -37,7 +39,7 @@ $db = DatabaseFactory::Create($dbConfig, DatabaseContract::TYPE_PDO);
 // }
 // 
 
-var_dump($_POST);
+// var_dump($_POST);
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     $firstName = $_POST['first_name'];
@@ -54,8 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         "INSERT INTO actor (first_name, last_name) VALUES('$firstName', '$lastName')"
     ]);
 
-       //Reload della pagina
-       header("Location : index.php"); //Reload della pagina
+    //Reload della pagina
+    header("Location : index.php"); //Reload della pagina
 
 }
 ?>
@@ -73,19 +75,60 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 <!-- Restituzione da db con ciclo foreach -->
 
 <body>
-    <div class="container">
+<div class="container w-50">
+
+<div class="card">
+    <div class="card-body">
+        <div class="card-title">
+            Crea un nuovo attore nel db:
+        </div>
+        <form action="" method="POST">
+            <input type="text" name="first_name" placeholder="nome">
+            <input type="text" name="last_name" placeholder="cognome">
+            <input type="submit" value="Invia">
+
+
+        </form>
+    </div>
+
+</div>
+</div>
+
+<hr>
+    <div class="container w-25">
         <!-- Qui in questo codice sono implemenate il fetch e il fetchAll, ma il secondo svuota comunque l'array e non è compatibile con il fetch sulle stesse informazioni -->
-        <div class="card">
+        <div class="card d-flex">
             <div class="card-body">
                 <div class="card-title">
-                    Actors SQL query #1
+                    Actors SQL query #1 with MysqlPDO
                 </div>
                 <!-- query eseguita passando il parametro e specificando un array associativo ["param1" => "%pen%"]-->
                 <ul class="list-group">
-                    <?php $result =  $db->getData("SELECT * FROM actor WHERE first_name LIKE :param1", ["param1" => "%pen%"]); ?>
+                    <?php $result =  $db2->getData("SELECT * FROM actor WHERE first_name LIKE :param1", ["param1" => "%pen%"]); ?>
                     <?php while ($actor = $result->fetch()) : ?>
-                        <li class="list-group-item"><a href="update.php?actor_id=<?=$actor['actor_id'] ?>"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></a></li>
-                    <?php endwhile; ?>                   
+                        <li class="list-group-item d-flex justify-content-between"><a href="update.php?actor_id=<?= $actor['actor_id'] ?>"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></a><a href="delete.php?actor_id=<?= $actor['actor_id'] ?>"><i class="fa-solid fa-trash-can"></i></a></li>
+                    <?php endwhile;  ?>
+                    <?php /* foreach ($result->fetchAll() as $actor) : ?>
+                        <li class="list-group-item"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></li>
+                    <?php endforeach; */  ?>
+                </ul>
+            </div>
+
+        </div>
+        <hr>
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title">
+                    Actors SQL query #2 with MysqlPDO
+                </div>
+                <!--query eseguita in cui il parametro passato con il ? i parametri passati vengono specificati
+                    secondo l'ordine con cui vengono passati ogni ? corrisponde ad un argomento si possono
+                    inserire anche piu di uno  sempre insieme dentro le quadre -->
+                <ul class="list-group">
+                    <?php $result =  $db2->getData("SELECT * FROM actor WHERE first_name LIKE ?", ["%alb%"]); ?>
+                    <?php while ($actor = $result->fetch()) : ?>
+                        <li class="list-group-item d-flex justify-content-between"><a href="update.php?actor_id=<?= $actor['actor_id'] ?>"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></a><span><a href="delete.php?actor_id=<?= $actor['actor_id'] ?>"><i class="fa-solid fa-trash-can"></i></a></span></li>
+                    <?php endwhile; ?>
                     <?php /*foreach ($result->fetchAll() as $actor) : ?>
                         <li class="list-group-item"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></li>
                     <?php endforeach; */ ?>
@@ -97,27 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <div class="card">
             <div class="card-body">
                 <div class="card-title">
-                    Actors SQL query #2
-                </div>
-                <!--query eseguita in cui il parametro passato con il ? i parametri passati vengono specificati
-                    secondo l'ordine con cui vengono passati ogni ? corrisponde ad un argomento si possono
-                    inserire anche piu di uno  sempre insieme dentro le quadre -->
-                <ul class="list-group">
-                    <?php $result =  $db->getData("SELECT * FROM actor WHERE first_name LIKE ?", ["%alb%"]); ?>
-                    <?php while ($actor = $result->fetch()) : ?>
-                        <li class="list-group-item"><a href="update.php?actor_id=<?=$actor['actor_id'] ?>"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></a></li>
-                    <?php endwhile; ?>                
-                    <?php /*foreach ($result->fetchAll() as $actor) : ?>
-                        <li class="list-group-item"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></li>
-                    <?php endforeach; */ ?>
-                </ul>
-            </div>
-
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="card-title">
-                    Actors SQL query #3
+                    Actors SQL query #3 with mysqli
                 </div>
                 <!--query eseguita in cui il parametro passato con il ? i parametri passati vengono specificati
                     secondo l'ordine con cui vengono passati ogni ? corrisponde ad un argomento si possono
@@ -125,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <ul class="list-group">
                     <?php $result =  $db->getData("SELECT * FROM actor ORDER BY actor_id DESC LIMIT 5", []); ?>
                     <?php while ($actor = $result->fetch()) : ?>
-                        <li class="list-group-item"><a href="update.php?actor_id=<?=$actor['actor_id'] ?>"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></a></li>                   
+                        <li class="list-group-item d-flex justify-content-between"><a href="update.php?actor_id=<?= $actor['actor_id'] ?>"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></a><a href="delete.php?actor_id=<?= $actor['actor_id'] ?>"><i class="fa-solid fa-trash-can"></i></a></li>
                     <?php endwhile; ?>
                     <?php /*foreach ($result->fetchAll() as $actor) : ?>
                         <li class="list-group-item"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></li>
@@ -134,25 +157,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             </div>
 
         </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="card-title">
-                    Crea un nuovo attore nel db:
-                </div>
-                <form action="" method="POST">
-                    <input type="text" name="first_name">
-                    <input type="text" name="last_name">
-                    <input type="submit" value="Invia">
 
-
-                </form>
-            </div>
-
-        </div>
 
 
 
     </div>
+    
+    <script src="https://kit.fontawesome.com/a64b9c8090.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
+
 </html>

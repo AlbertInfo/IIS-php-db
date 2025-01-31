@@ -2,6 +2,7 @@
 
 namespace Alberto\SakilaPhpTest;
 
+
 use PDOStatement;
 
 
@@ -18,17 +19,16 @@ class MyPDOQueryResult implements DatabaseQueryResultContract
     }
 
 
-    public function fetch() : mixed
+    public function fetch(): mixed
     {
 
         return $this->statement->fetch();
     }
 
 
-    public function fetchAll() :array
+    public function fetchAll(): array
     {
 
         return $this->statement->fetchAll();
     }
 }
-

@@ -28,7 +28,7 @@ $dbConfig = new DBConfig(
 // Qui posso passare due tipi di connessione al db o TYPE_PDO O TYPE_MYSQLi che attualmente non è
 //implementato e tira un'eccezione.
 $db = DatabaseFactory::Create($dbConfig, DatabaseContract::TYPE_PDO);
-
+$selectedActor = null;
 // $results = $db->getData("actor", []);
 // var_dump($results);
 // foreach ($results as $singleResult) {
@@ -58,21 +58,21 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     //Query POST PER AGGIORNARE IL NOME DELL'ATTORE.
     $db->setData("UPDATE actor SET first_name = ?, last_name = ? WHERE actor_id = ?", [
-        [$firstName, $lastName,$id]
+        [$firstName, $lastName, $id]
 
     ]);
+    
+    //Reload della pagina
+    header("Location : index.php"); //Reload della pagina
+    // $result =  $db->getData("SELECT * FROM actor WHERE actor_id = ?", [$id]);
 
-    $result =  $db->getData("SELECT * FROM actor WHERE actor_id = ?", [$id]);
-
-    $selectedActor = $result->fetch();
+    // $selectedActor = $result->fetch();
     //Inserimento di due elementi alla volta in transazione.
     // $db->doWithTransaction([
     //     "INSERT INTO actor (first_name, last_name) VALUES('$firstName', '$lastName')",
     //     "INSERT INTO actor (first_name, last_name) VALUES('$firstName', '$lastName')"
     // ]);
 
-    //Reload della pagina
-    header("Location : index.php"); //Reload della pagina
 
 }
 ?>
@@ -95,9 +95,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     Aggiorna il nome attore
                 </div>
                 <form action="" method="POST">
-                    <input type="hidden" name="actor_id" value="<?= $id ?>">
-                    <input type="text" name="first_name" value="<?= $selectedActor['first_name'] ?>">
-                    <input type="text" name="last_name" value="<?= $selectedActor['last_name'] ?>">
+                    <input type="hidden" name="actor_id" value="<?=$id ?>">
+                    <input type="text" name="first_name" value="<?= !is_null($selectedActor) ? $selectedActor["first_name"] : '' ?>">
+                    <input type="text" name="last_name" value="<?=!is_null($selectedActor) ? $selectedActor["last_name"] : ''?>">
                     <input type="submit" value="Invia">
 
 
