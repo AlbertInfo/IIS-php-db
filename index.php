@@ -38,20 +38,26 @@ $db = DatabaseFactory::Create($dbConfig, DatabaseContract::TYPE_PDO);
 // 
 
 var_dump($_POST);
-if ($_SERVER['REQUEST_METHOD'] == "POST"){
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     $firstName = $_POST['first_name'];
     $lastName = $_POST['last_name'];
-    //Inserimento a DB..
+    //Inserimento a DB senza transazione : togliere commento se si vuole testare.
     //Passo la query e un array di array cosi come richiesto dall'execute di PDO per l'insert.
-    $db->setData("INSERT INTO actor (first_name, last_name) VALUES (?,?)", [
-       [$firstName, $lastName]
-    
-    ]);
-    //Reload della pagina
-    header("Location : index.php"); //Reload della pagina
-}
+    // $db->setData("INSERT INTO actor (first_name, last_name) VALUES (?,?)", [
+    //    [$firstName, $lastName]
 
+    // ]);
+    //Inserimento di due elementi alla volta in transazione.
+    $db->doWithTransaction([
+        "INSERT INTO actor (first_name, last_name) VALUES('$firstName', '$lastName')",
+        "INSERT INTO actor (first_name, last_name) VALUES('$firstName', '$lastName')"
+    ]);
+
+       //Reload della pagina
+       header("Location : index.php"); //Reload della pagina
+
+}
 ?>
 
 
@@ -78,8 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
                 <ul class="list-group">
                     <?php $result =  $db->getData("SELECT * FROM actor WHERE first_name LIKE :param1", ["param1" => "%pen%"]); ?>
                     <?php while ($actor = $result->fetch()) : ?>
-                        <li class="list-group-item"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></li>
-                    <?php endwhile; ?>
+                        <li class="list-group-item"><a href="update.php?actor_id=<?=$actor['actor_id'] ?>"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></a></li>
+                    <?php endwhile; ?>                   
                     <?php /*foreach ($result->fetchAll() as $actor) : ?>
                         <li class="list-group-item"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></li>
                     <?php endforeach; */ ?>
@@ -99,8 +105,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
                 <ul class="list-group">
                     <?php $result =  $db->getData("SELECT * FROM actor WHERE first_name LIKE ?", ["%alb%"]); ?>
                     <?php while ($actor = $result->fetch()) : ?>
-                        <li class="list-group-item"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></li>
-                    <?php endwhile; ?>
+                        <li class="list-group-item"><a href="update.php?actor_id=<?=$actor['actor_id'] ?>"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></a></li>
+                    <?php endwhile; ?>                
                     <?php /*foreach ($result->fetchAll() as $actor) : ?>
                         <li class="list-group-item"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></li>
                     <?php endforeach; */ ?>
@@ -119,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
                 <ul class="list-group">
                     <?php $result =  $db->getData("SELECT * FROM actor ORDER BY actor_id DESC LIMIT 5", []); ?>
                     <?php while ($actor = $result->fetch()) : ?>
-                        <li class="list-group-item"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></li>
+                        <li class="list-group-item"><a href="update.php?actor_id=<?=$actor['actor_id'] ?>"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></a></li>                   
                     <?php endwhile; ?>
                     <?php /*foreach ($result->fetchAll() as $actor) : ?>
                         <li class="list-group-item"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></li>
@@ -149,5 +155,4 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
-
 </html>

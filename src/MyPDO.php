@@ -45,17 +45,17 @@ class MyPDO extends \PDO implements DatabaseContract
     {
         try {
 
-            $this->beginTransaction();
+            $this->beginTransaction(); //comincia la transazione
 
             foreach($operations as $operation){
-                $this->exec($operation);
+                $this->exec($operation); //predispone lo statement
             }
 
-            $this->commit();
+            $this->commit(); //esegue le operazioni contro il db
 
         } catch (\Exception $error) {
             
-            $this->rollBack();
+            $this->rollBack(); //abortisce lo script se cè un errore
             
             throw new \Exception("Transaction aborted : " . $error->getMessage());
         }
