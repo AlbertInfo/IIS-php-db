@@ -8,6 +8,7 @@ require_once __DIR__ . '/vendor/autoload.php'; //caricare l'autoloader;
 use Alberto\SakilaPhpTest\DatabaseContract;
 use Alberto\SakilaPhpTest\DatabaseFactory;
 use Alberto\SakilaPhpTest\DBConfig;
+use  Alberto\SakilaPhpTest\Helper;
 use Alberto\SakilaPhpTest\MyPDO; //necessario per utilizzare la classe 
 
 //Creo una istanza di DBConfig e passo i parametri di connessione del db
@@ -25,10 +26,16 @@ $dbConfig = new DBConfig(
 //Creo la connessione a db passando la dbConfig che mi ritorna la stringa 
 //proprio come vuole il PDO.
 
+
+
+
 // Qui posso passare due tipi di connessione al db o TYPE_PDO O TYPE_MYSQLi che attualmente non è
 //implementato e tira un'eccezione.
 $db = DatabaseFactory::Create($dbConfig, DatabaseContract::TYPE_PDO);
-$selectedActor = null;
+$db2 = DatabaseFactory::Create($dbConfig, DatabaseContract::TYPE_MySQLi);
+
+$selectedActor = array(); // questo viene settato cosi perchè nella condizione dentro $POST NON ESISTE
+//$selectedActor, dentro $_SERVER['REQUEST_METHOD'] == "GET" ------
 // $results = $db->getData("actor", []);
 // var_dump($results);
 // foreach ($results as $singleResult) {
@@ -36,6 +43,7 @@ $selectedActor = null;
 //     echo $singleResult["first_name"] . PHP_EOL;
 // }
 // 
+
 
 // var_dump($_POST);
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
@@ -57,11 +65,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $id = $_POST['actor_id'];
 
     //Query POST PER AGGIORNARE IL NOME DELL'ATTORE.
-    $db->setData("UPDATE actor SET first_name = ?, last_name = ? WHERE actor_id = ?", [
+    $db2->setData("UPDATE actor SET first_name = ?, last_name = ? WHERE actor_id = ?", [
         [$firstName, $lastName, $id]
 
     ]);
-    
+
     //Reload della pagina
     header("Location : index.php"); //Reload della pagina
     // $result =  $db->getData("SELECT * FROM actor WHERE actor_id = ?", [$id]);
@@ -95,9 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     Aggiorna il nome attore
                 </div>
                 <form action="" method="POST">
-                    <input type="hidden" name="actor_id" value="<?=$id ?>">
-                    <input type="text" name="first_name" value="<?= !is_null($selectedActor) ? $selectedActor["first_name"] : '' ?>">
-                    <input type="text" name="last_name" value="<?=!is_null($selectedActor) ? $selectedActor["last_name"] : ''?>">
+                    <input type="hidden" name="actor_id" value="<?= $id ?>">
+                    <input type="text" name="first_name" value="<?= Helper::AccesToValue($selectedActor, 'first_name', 'null') ?>">
+                    <input type="text" name="last_name" value="<?= Helper::AccesToValue($selectedActor, 'last_name', 'null') ?>">
                     <input type="submit" value="Invia">
 
 

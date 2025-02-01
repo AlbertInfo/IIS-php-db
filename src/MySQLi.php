@@ -4,24 +4,34 @@ namespace Alberto\SakilaPhpTest;
 
 use Exception;
 
-class MySQLi extends \mysqli implements DatabaseContract {
+class MySQLi extends \mysqli implements DatabaseContract
+{
 
-    public function __construct( DBConfig $dBConfig)
+    public function __construct(DBConfig $dBConfig)
     {
-        parent::__construct($dBConfig->host, $dBConfig->user, $dBConfig->password, $dBConfig->dbName,$dBConfig->port);
+        parent::__construct($dBConfig->host, $dBConfig->user, $dBConfig->password, $dBConfig->dbName, $dBConfig->port);
     }
 
     public function getData(string $query, array $params = []): DatabaseQueryResultContract
     {
-       $results= $this->query($query);
 
-       return new MySQLiQueryResult($results);
-        
+        //Implementaziobe di mysqli.
+        $statement =  $this->prepare($query);
+        $statement->execute($params);
+
+        $result = $statement->get_result();
+
+        return new MySQLiQueryResult($result);
     }
 
     public function setData(string $command, array $items): void
     {
-        throw new Exception('Not implemented');
+
+        $statement =  $this->prepare($command);
+
+       foreach($items as $item){
+        $statement->execute($item);
+       }
     }
 
     public function doWithTransaction(array $operations): void

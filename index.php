@@ -8,6 +8,7 @@ require_once __DIR__ . '/vendor/autoload.php'; //caricare l'autoloader;
 use Alberto\SakilaPhpTest\DatabaseContract;
 use Alberto\SakilaPhpTest\DatabaseFactory;
 use Alberto\SakilaPhpTest\DBConfig;
+
 use Alberto\SakilaPhpTest\MyPDO; //necessario per utilizzare la classe 
 
 //Creo una istanza di DBConfig e passo i parametri di connessione del db
@@ -46,15 +47,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $lastName = $_POST['last_name'];
     //Inserimento a DB senza transazione : togliere commento se si vuole testare.
     //Passo la query e un array di array cosi come richiesto dall'execute di PDO per l'insert.
-    // $db->setData("INSERT INTO actor (first_name, last_name) VALUES (?,?)", [
-    //    [$firstName, $lastName]
+    $db->setData("INSERT INTO actor (first_name, last_name) VALUES (?,?)", [
+       [$firstName, $lastName]
 
-    // ]);
-    //Inserimento di due elementi alla volta in transazione.
-    $db->doWithTransaction([
-        "INSERT INTO actor (first_name, last_name) VALUES('$firstName', '$lastName')",
-        "INSERT INTO actor (first_name, last_name) VALUES('$firstName', '$lastName')"
     ]);
+    //Inserimento di due elementi alla volta in transazione.
+    // $db->doWithTransaction([
+    //     "INSERT INTO actor (first_name, last_name) VALUES('$firstName', '$lastName')",
+    //     "INSERT INTO actor (first_name, last_name) VALUES('$firstName', '$lastName')"
+    // ]);
 
     //Reload della pagina
     header("Location : index.php"); //Reload della pagina
@@ -100,13 +101,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <div class="card d-flex">
             <div class="card-body">
                 <div class="card-title">
-                    Actors SQL query #1 with MysqlPDO
+                    Actors SQL query #1 
                 </div>
                 <!-- query eseguita passando il parametro e specificando un array associativo ["param1" => "%pen%"]-->
                 <ul class="list-group">
                     <?php $result =  $db2->getData("SELECT * FROM actor WHERE first_name LIKE :param1", ["param1" => "%pen%"]); ?>
                     <?php while ($actor = $result->fetch()) : ?>
-                        <li class="list-group-item d-flex justify-content-between"><a href="update.php?actor_id=<?= $actor['actor_id'] ?>"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></a><a href="delete.php?actor_id=<?= $actor['actor_id'] ?>"><i class="fa-solid fa-trash-can"></i></a></li>
+                        <li class="list-group-item d-flex justify-content-between"><a class="link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"  href="update.php?actor_id=<?= $actor['actor_id'] ?>"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></a><a href="delete.php?actor_id=<?= $actor['actor_id'] ?>"><i class="fa-solid fa-trash-can"></i></a></li>
                     <?php endwhile;  ?>
                     <?php /* foreach ($result->fetchAll() as $actor) : ?>
                         <li class="list-group-item"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></li>
@@ -119,15 +120,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <div class="card">
             <div class="card-body">
                 <div class="card-title">
-                    Actors SQL query #2 with MysqlPDO
+                    Actors SQL query #2 
                 </div>
                 <!--query eseguita in cui il parametro passato con il ? i parametri passati vengono specificati
                     secondo l'ordine con cui vengono passati ogni ? corrisponde ad un argomento si possono
                     inserire anche piu di uno  sempre insieme dentro le quadre -->
                 <ul class="list-group">
-                    <?php $result =  $db2->getData("SELECT * FROM actor WHERE first_name LIKE ?", ["%alb%"]); ?>
+                    <?php $result =  $db->getData("SELECT * FROM actor WHERE first_name LIKE ?", ["%alb%"]); ?>
                     <?php while ($actor = $result->fetch()) : ?>
-                        <li class="list-group-item d-flex justify-content-between"><a href="update.php?actor_id=<?= $actor['actor_id'] ?>"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></a><span><a href="delete.php?actor_id=<?= $actor['actor_id'] ?>"><i class="fa-solid fa-trash-can"></i></a></span></li>
+                        <li class="list-group-item d-flex justify-content-between"><a class="link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="update.php?actor_id=<?= $actor['actor_id'] ?>"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></a><span><a href="delete.php?actor_id=<?= $actor['actor_id'] ?>"><i class="fa-solid fa-trash-can"></i></a></span></li>
                     <?php endwhile; ?>
                     <?php /*foreach ($result->fetchAll() as $actor) : ?>
                         <li class="list-group-item"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></li>
@@ -140,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <div class="card">
             <div class="card-body">
                 <div class="card-title">
-                    Actors SQL query #3 with mysqli
+                    Actors SQL query #3 with 
                 </div>
                 <!--query eseguita in cui il parametro passato con il ? i parametri passati vengono specificati
                     secondo l'ordine con cui vengono passati ogni ? corrisponde ad un argomento si possono
@@ -148,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 <ul class="list-group">
                     <?php $result =  $db->getData("SELECT * FROM actor ORDER BY actor_id DESC LIMIT 5", []); ?>
                     <?php while ($actor = $result->fetch()) : ?>
-                        <li class="list-group-item d-flex justify-content-between"><a href="update.php?actor_id=<?= $actor['actor_id'] ?>"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></a><a href="delete.php?actor_id=<?= $actor['actor_id'] ?>"><i class="fa-solid fa-trash-can"></i></a></li>
+                        <li class="list-group-item d-flex justify-content-between"><a class="link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="update.php?actor_id=<?= $actor['actor_id'] ?>"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></a><a href="delete.php?actor_id=<?= $actor['actor_id'] ?>"><i class="fa-solid fa-trash-can"></i></a></li>
                     <?php endwhile; ?>
                     <?php /*foreach ($result->fetchAll() as $actor) : ?>
                         <li class="list-group-item"><?= $actor["first_name"] ?>, <?= $actor["last_name"] ?></li>
