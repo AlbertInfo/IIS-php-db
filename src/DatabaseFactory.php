@@ -15,7 +15,7 @@ class DatabaseFactory
 
 
     // il metodo create restuisce un database contract o una pdo? 
-    public static function Create( string $type = DatabaseContract::TYPE_PDO): DatabaseContract | null
+    public static function Create(string $type = DatabaseContract::TYPE_PDO): DatabaseContract | null
     {
 
         $dbConfig = self::GetDBConfig();
@@ -32,7 +32,7 @@ class DatabaseFactory
 
     private static function CreateWithPdo(DbConfig $dbConfig)
     {
-        
+
         try {
 
             $pdo = new MyPDO($dbConfig); // creo una istanza della classe MyPDO che sta in src/MyPDO.php
@@ -49,7 +49,7 @@ class DatabaseFactory
     {
 
         try {
-           
+
             $mysqli = new MySQLi($dbConfig); // creo una istanza della classe MyPDO che sta in src/MyPDO.php
 
 
@@ -60,7 +60,7 @@ class DatabaseFactory
         }
     }
 
-    private static function GetDBConfig() : DBConfig
+    private static function GetDBConfig(): DBConfig
     {
 
         //Implementazione della libreria DOT ENV
@@ -68,11 +68,11 @@ class DatabaseFactory
         //Assegno ad una variabile la creazione di una dotenv immutabile
         //Questo metodo chiama una factory
         $dotenv = Dotenv::createImmutable(__DIR__ . "/../"); // Devo passare la variabile DIR che mappa la directory del progetto
-        $dotenv->load();
+        $dotenv->load(); //carico le variabili di ambiente.
         //Con questa riga di codice : attribusico il required a i parametri di configurazione
         //In questo modo rimane più facile isolare un ipotetico problema relativo alle credenziali
-        $dotenv->required(['DB_HOST','DB_NAME','DB_USER','DB_PASS','DB_PORT']);
-        
+        $dotenv->required(['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS', 'DB_PORT']);
+
         $host = $_ENV['DB_HOST'];
         $dbName = $_ENV['DB_NAME'];
         $port = $_ENV['DB_PORT'];

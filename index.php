@@ -1,39 +1,16 @@
 <?php
 
-require_once __DIR__ . '/vendor/autoload.php'; //caricare l'autoloader;
-
+require_once __DIR__ . '/common.php'; // per utilizzare le create dentro common.php
 //Se voglio modificare il composer.json devo fare il comando composer update
 //Come aggiunta di dipendenze o cambio autoload
 
-use Alberto\SakilaPhpTest\DatabaseContract;
-use Alberto\SakilaPhpTest\DatabaseFactory;
-use Alberto\SakilaPhpTest\DBConfig;
 
-use Alberto\SakilaPhpTest\MyPDO; //necessario per utilizzare la classe 
-
+//Questa era la precente creazione della connessione a  db che è stata spostata su common.php
+// $db = DatabaseFactory::Create( DatabaseContract::TYPE_MySQLi);
+// $db2 = DatabaseFactory::Create( DatabaseContract::TYPE_PDO);
 
 
 
-
-
-//Creo la connessione a db passando la dbConfig che mi ritorna la stringa 
-//proprio come vuole il PDO.
-
-// Qui posso passare due tipi di connessione al db o TYPE_PDO O TYPE_MYSQLi che attualmente non è
-//implementato e tira un'eccezione.
-$db = DatabaseFactory::Create( DatabaseContract::TYPE_MySQLi);
-$db2 = DatabaseFactory::Create( DatabaseContract::TYPE_PDO);
-
-
-// $results = $db->getData("actor", []);
-// var_dump($results);
-// foreach ($results as $singleResult) {
-
-//     echo $singleResult["first_name"] . PHP_EOL;
-// }
-// 
-
-// var_dump($_POST);
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     $firstName = $_POST['first_name'];

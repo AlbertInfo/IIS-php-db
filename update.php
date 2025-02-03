@@ -1,36 +1,18 @@
 <?php
+use Alberto\SakilaPhpTest\Helper;
 
-require_once __DIR__ . '/vendor/autoload.php'; //caricare l'autoloader;
-
+require_once __DIR__ . '/common.php'; // per utilizzare le create e l'autoload dentro common.php
 //Se voglio modificare il composer.json devo fare il comando composer update
 //Come aggiunta di dipendenze o cambio autoload
 
-use Alberto\SakilaPhpTest\DatabaseContract;
-use Alberto\SakilaPhpTest\DatabaseFactory;
-
-use  Alberto\SakilaPhpTest\Helper;
-use Alberto\SakilaPhpTest\MyPDO; //necessario per utilizzare la classe 
 
 
-
-
-// Qui posso passare due tipi di connessione al db o TYPE_PDO O TYPE_MYSQLi che attualmente non è
-//implementato e tira un'eccezione.
-$db = DatabaseFactory::Create( DatabaseContract::TYPE_PDO);
-$db2 = DatabaseFactory::Create( DatabaseContract::TYPE_MySQLi);
+//Questa era la precente creazione della connessione a  db che è stata spostata su common.php
+// $db = DatabaseFactory::Create( DatabaseContract::TYPE_PDO);
+// $db2 = DatabaseFactory::Create( DatabaseContract::TYPE_MySQLi);
 
 $selectedActor = array(); // questo viene settato cosi perchè nella condizione dentro $POST NON ESISTE
-//$selectedActor, dentro $_SERVER['REQUEST_METHOD'] == "GET" ------
-// $results = $db->getData("actor", []);
-// var_dump($results);
-// foreach ($results as $singleResult) {
 
-//     echo $singleResult["first_name"] . PHP_EOL;
-// }
-// 
-
-
-// var_dump($_POST);
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
     $id = $_GET['actor_id'];
     //Vado a prendere dal db l'attore che ha l'id che arriva da GET
@@ -57,9 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     //Reload della pagina
     header("Location : index.php"); //Reload della pagina
-    // $result =  $db->getData("SELECT * FROM actor WHERE actor_id = ?", [$id]);
-
-    // $selectedActor = $result->fetch();
+   
+    
+    
     //Inserimento di due elementi alla volta in transazione.
     // $db->doWithTransaction([
     //     "INSERT INTO actor (first_name, last_name) VALUES('$firstName', '$lastName')",
