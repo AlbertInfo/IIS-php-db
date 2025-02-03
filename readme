@@ -1,0 +1,7 @@
+PER UTILIZZARE QUESTE CLASSI DENTRO SRC , IN UN NUOVO PROGETTO PULITO BISOGNA CAMBIARE IL NAMESPACE , L'AUTOLOAD ED EFFETTUARE COMPOSER UPDATE
+
+esempio se i file delle classi del nuovo progetto si troveranno dentro la cartella projectDatabase dentro src l'autoload verrà rinominato : 
+
+"psr-4": {
+            "nomeNuovo\\nomeNuovo\\": "projectDatabase/src/"
+        }

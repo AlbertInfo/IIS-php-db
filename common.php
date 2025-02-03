@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php'; //caricare l'autoloader;
-use Alberto\SakilaPhpTest\DatabaseContract;
-use Alberto\SakilaPhpTest\DatabaseFactory;
+use Alberto\DatabaseAbstraction\DatabaseContract;
+use Alberto\DatabaseAbstraction\DatabaseFactory;
 
 
 

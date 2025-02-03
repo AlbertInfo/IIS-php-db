@@ -1,6 +1,6 @@
 <?php
 
-namespace Alberto\SakilaPhpTest;
+namespace Alberto\DatabaseAbstraction;
 //Questa è una classe  DTO CHE setta la configurazione del db;
 class DBConfig
 {

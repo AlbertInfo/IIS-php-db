@@ -1,9 +1,9 @@
 <?php
 //Attraverso il namespace impostato come da composer.json riesco a fare l'autoload delle classi senza
 //dover fare require dei singoli file.php
-namespace Alberto\SakilaPhpTest;
+namespace Alberto\DatabaseAbstraction;
 
-use Alberto\SakilaPhpTest\DatabaseContract;
+use Alberto\DatabaseAbstraction\DatabaseContract;
 use Exception;
 
 //PDO è UNA classe nativa di php e richiede lo slash prima 

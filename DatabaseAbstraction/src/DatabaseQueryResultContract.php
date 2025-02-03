@@ -1,5 +1,5 @@
 <?php
-namespace Alberto\SakilaPhpTest;
+namespace Alberto\DatabaseAbstraction;
 
 interface DatabaseQueryResultContract
 {

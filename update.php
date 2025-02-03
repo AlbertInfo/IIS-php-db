@@ -1,5 +1,5 @@
 <?php
-use Alberto\SakilaPhpTest\Helper;
+use Alberto\DatabaseAbstraction\Helper;
 
 require_once __DIR__ . '/common.php'; // per utilizzare le create e l'autoload dentro common.php
 //Se voglio modificare il composer.json devo fare il comando composer update
