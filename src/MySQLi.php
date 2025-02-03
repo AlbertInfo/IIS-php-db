@@ -29,14 +29,31 @@ class MySQLi extends \mysqli implements DatabaseContract
 
         $statement =  $this->prepare($command);
 
-       foreach($items as $item){
-        $statement->execute($item);
-       }
+        foreach ($items as $item) {
+            $statement->execute($item);
+        }
     }
 
     public function doWithTransaction(array $operations): void
+    //Vengono passate delle operations da eseguire
     {
-        throw new Exception('Not implemented');
+        try {
+            //Apriamo la transazione
+            $this->begin_transaction();
+
+            foreach ($operations as $operation) {
+                //Ciclo sulle operazione e esecuzione tramite query
+                $this->query($operation);
+            }
+            //Se invece vanno a buon fine eseguo il commit
+            $this->commit();
+        } catch (Exception $e) {
+
+            //Se le operazioni non vanno a buon fine annullo tutto.
+            $this->rollback();
+
+            throw new Exception("Transaction aborted: " . $e->getMessage());
+        }
     }
 
     //Quando il garbage collector vede che il db non è più utilizzato
